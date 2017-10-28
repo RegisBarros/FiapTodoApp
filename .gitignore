@@ -2,6 +2,5 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/FiapTodoApp
-/FiapTodoApp/bin/x86/Debug
+/FiapTodoApp/bin
 /FiapTodoApp/obj
