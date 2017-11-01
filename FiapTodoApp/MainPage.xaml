@@ -18,7 +18,16 @@
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <ListView ItemsSource="{x:Bind ViewModel.TodoItems, Mode=OneWay}" SelectionChanged="{x:Bind ViewModel.TodoItems_SelectionChanged}">
+        <ListView ItemsSource="{x:Bind ViewModel.TodoItems, Mode=OneWay}" 
+            SelectionChanged="{x:Bind ViewModel.TodoItems_SelectionChanged}"
+            RightTapped="{x:Bind ViewModel.TodoItems_RightTapped}">
+            <ListView.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyout.Items>
+                        <MenuFlyoutItem Text="Remover" Click="{x:Bind ViewModel.RemoveTodoItem_Click }"/>
+                    </MenuFlyout.Items>
+                </MenuFlyout>
+            </ListView.ContextFlyout>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="model:TodoItem">
                     <Grid>

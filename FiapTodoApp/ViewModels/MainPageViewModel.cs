@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace FiapTodoApp.ViewModels
 {
@@ -42,6 +43,22 @@ namespace FiapTodoApp.ViewModels
             }
 
             NavigationService.Navigate<EditTodoItem>(listView.SelectedItem);
+        }
+
+        public async void RemoveTodoItem_Click()
+        {
+            if (_selectedDeleteTodoItem != null)
+            {
+                await TodoItemRepository.Delete(_selectedDeleteTodoItem);
+
+                _selectedDeleteTodoItem = null;
+            }
+        }
+
+        private TodoItem _selectedDeleteTodoItem;
+        public void TodoItems_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            _selectedDeleteTodoItem = ((FrameworkElement)e.OriginalSource).DataContext as TodoItem;
         }
     }
 }
