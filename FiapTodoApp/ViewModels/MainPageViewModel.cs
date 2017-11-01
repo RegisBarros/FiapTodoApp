@@ -1,4 +1,5 @@
-﻿using FiapTodoApp.Models;
+﻿using FiapTodoApp.Abstracts;
+using FiapTodoApp.Models;
 using FiapTodoApp.Pages;
 using FiapTodoApp.Repositories;
 using FiapTodoApp.Services;
@@ -14,7 +15,7 @@ using Windows.UI.Xaml.Input;
 
 namespace FiapTodoApp.ViewModels
 {
-    public class MainPageViewModel
+    public class MainPageViewModel : NotifyableClass
     {
         public MockCategoryRepository CategoryRepository { get; private set; } = MockCategoryRepository.Instance;
         public MockTodoItemRepository TodoItemRepository { get; private set; } = MockTodoItemRepository.Instance;
@@ -26,6 +27,19 @@ namespace FiapTodoApp.ViewModels
         {
             await CategoryRepository.LoadAll();
             await TodoItemRepository.LoadAll();
+        }
+
+        private bool _isSplitViewOpen;
+
+        public bool IsSplitViewOpen
+        {
+            get { return _isSplitViewOpen; }
+            set { Set(ref _isSplitViewOpen, value); }
+        }
+
+        public void HamburguerButton_Click()
+        {
+            IsSplitViewOpen = !IsSplitViewOpen;
         }
 
         public void AddButton_Click(object sender, RoutedEventArgs e)

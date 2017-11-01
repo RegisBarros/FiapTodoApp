@@ -15,31 +15,71 @@
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
-    
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <ListView ItemsSource="{x:Bind ViewModel.TodoItems, Mode=OneWay}" 
-            SelectionChanged="{x:Bind ViewModel.TodoItems_SelectionChanged}"
-            RightTapped="{x:Bind ViewModel.TodoItems_RightTapped}">
-            <ListView.ContextFlyout>
-                <MenuFlyout>
-                    <MenuFlyout.Items>
-                        <MenuFlyoutItem Text="Remover" Click="{x:Bind ViewModel.RemoveTodoItem_Click }"/>
-                    </MenuFlyout.Items>
-                </MenuFlyout>
-            </ListView.ContextFlyout>
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="model:TodoItem">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="40" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Ellipse Height="20" Width="20" Fill="{x:Bind Category.Color}" />
-                        <TextBlock Text="{x:Bind Title}" Grid.Column="1" />
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </Grid>
+    <SplitView Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
+            IsPaneOpen="{x:Bind ViewModel.IsSplitViewOpen, Mode=TwoWay}"
+            OpenPaneLength="220" DisplayMode="CompactOverlay" CompactPaneLength="44">
+        <SplitView.Pane>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" MaxHeight="640" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Button Width="44" Height="44" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
+                    Background="Transparent" Click="{x:Bind ViewModel.HamburguerButton_Click}" />
+
+                <ListView ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}" Grid.Row="1">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Category">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Height="20" Width="20" Fill="{x:Bind Color, Mode=OneWay}" Margin="0,0,12,0" />
+                                <TextBlock Text="{x:Bind Description, Mode=OneWay}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+
+                <StackPanel Orientation="Vertical" Grid.Row="2" Margin="0,0,0,48">
+                    <Button Background="Transparent">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Setting" Height="24" Width="24" Margin="0,0,12,0"/>
+                                <TextBlock Text="Configurações" />
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <Grid>
+                <ListView ItemsSource="{x:Bind ViewModel.TodoItems, Mode=OneWay}" 
+                SelectionChanged="{x:Bind ViewModel.TodoItems_SelectionChanged}"
+                RightTapped="{x:Bind ViewModel.TodoItems_RightTapped}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="model:TodoItem">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Height="20" Width="20" Fill="{x:Bind Category.Color}" />
+                                <TextBlock Text="{x:Bind Title}" Grid.Column="1" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyout.Items>
+                                <MenuFlyoutItem Text="Remover" Click="{x:Bind ViewModel.RemoveTodoItem_Click }"/>
+                            </MenuFlyout.Items>
+                        </MenuFlyout>
+                    </ListView.ContextFlyout>
+                </ListView>
+            </Grid>
+        </SplitView.Content>
+    </SplitView>
 </Page>
