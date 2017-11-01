@@ -10,6 +10,8 @@
 
     <Page.Resources>
         <converter:NullableDateTimeToNullableDateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
+        <converter:NullToBooleanConverter x:Key="BooleanConverter" />
+        <converter:NullToVisibilityConverter x:Key="VisibilityConverter" />
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar>
@@ -21,17 +23,39 @@
     </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel Padding="12">
-            <CheckBox IsChecked="{x:Bind ViewModel.TodoItem.IsComplete, Mode=TwoWay}" 
-                      Content="Tarefa finalizada" Margin="0,12" />
+        <ScrollViewer Margin="0,12">
+            <StackPanel Padding="12">
+                <CheckBox IsChecked="{x:Bind ViewModel.TodoItem.IsComplete, Mode=TwoWay}" 
+                          Content="Tarefa finalizada" Margin="0,12" />
 
-            <TextBox Header="Título" Text="{x:Bind ViewModel.TodoItem.Title, Mode=TwoWay}" Margin="0,12" />
+                <TextBox Header="Título" Text="{x:Bind ViewModel.TodoItem.Title, Mode=TwoWay}" Margin="0,12" />
 
-            <TextBox Header="Detalhes" Text="{x:Bind ViewModel.TodoItem.Details, Mode=TwoWay}" TextWrapping="Wrap" Height="120" Margin="0,12" />
+                <TextBox Header="Detalhes" Text="{x:Bind ViewModel.TodoItem.Details, Mode=TwoWay}" TextWrapping="Wrap" Height="120" Margin="0,12" />
 
-            <CalendarDatePicker Header="Inicia em" PlaceholderText="Selecione a data de início da sua tarefa"
-                                Date="{x:Bind ViewModel.TodoItem.StartDate, Mode=TwoWay, Converter={StaticResource DateTimeOffsetConverter}}" />
+                <CalendarDatePicker Header="Inicia em" PlaceholderText="Selecione a data de início da sua tarefa"
+                    Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, Converter={StaticResource DateTimeOffsetConverter}}" 
+                    Margin="0, 12" DateChanged="{x:Bind ViewModel.StartDatePicker_DateChanged}"/>
 
-        </StackPanel>
+                <Border Padding="12" BorderBrush="Black" BorderThickness="1" 
+                    Visibility="{x:Bind ViewModel.StartDate, Mode=OneWay, Converter={StaticResource VisibilityConverter}}"
+	                Margin="0,12">  
+                    <StackPanel>
+                        <ToggleSwitch Header="Lembrete" 
+                            IsOn="{x:Bind ViewModel.TodoItem.Appointment.Id, Mode=OneWay, Converter={StaticResource BooleanConverter}}"
+                            OnContent="Ligado" OffContent="Desligado" Margin="0,12" Name="tgReminder"
+                            Toggled="{x:Bind ViewModel.ToggleReminder_Toggled}"/>
+
+                        <TimePicker Time="{x:Bind ViewModel.StartTime, Mode=TwoWay}" 
+                        IsEnabled="{x:Bind tgReminder.IsOn, Mode=OneWay}" 
+                        MinuteIncrement="15" Margin="0, 12"/>
+
+                        <Slider Header="Minutos antes do início"  Minimum="{x:Bind ViewModel.MinimumSliderValue, Mode=OneWay}" Maximum="600" StepFrequency="15" Margin="0,12" 
+                            Value="{x:Bind ViewModel.TodoItem.Appointment.Reminder, Mode=TwoWay}"
+                            IsEnabled="{x:Bind tgReminder.IsOn, Mode=OneWay}" />
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Page>

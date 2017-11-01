@@ -51,6 +51,7 @@ namespace FiapTodoApp.Repositories
                 todoItem.Details = entity.Details;
                 todoItem.IsComplete = entity.IsComplete;
                 todoItem.StartDate = entity.StartDate;
+                todoItem.Appointment = entity.Appointment;
             }
         }
 
