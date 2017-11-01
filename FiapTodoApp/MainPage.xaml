@@ -9,7 +9,7 @@
     mc:Ignorable="d">
 
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar> 
             <CommandBar.PrimaryCommands>
                 <AppBarButton Label="Add" Icon="Add" Click="{x:Bind ViewModel.AddButton_Click}" />
             </CommandBar.PrimaryCommands>
