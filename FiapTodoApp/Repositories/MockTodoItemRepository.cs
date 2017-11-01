@@ -49,6 +49,8 @@ namespace FiapTodoApp.Repositories
             {
                 todoItem.Title = entity.Title;
                 todoItem.Details = entity.Details;
+                todoItem.IsComplete = entity.IsComplete;
+                todoItem.StartDate = entity.StartDate;
             }
         }
 

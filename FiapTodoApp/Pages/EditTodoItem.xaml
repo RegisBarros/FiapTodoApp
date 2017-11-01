@@ -5,8 +5,12 @@
     xmlns:local="using:FiapTodoApp.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:FiapTodoApp.Converters"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <converter:NullableDateTimeToNullableDateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
+    </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar>
             <CommandBar.PrimaryCommands>
@@ -18,9 +22,16 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Padding="12">
-            <TextBox Header="Título" Text="{x:Bind ViewModel.TodoItem.Title, Mode=TwoWay}" Margin="0,0,0,12" />
+            <CheckBox IsChecked="{x:Bind ViewModel.TodoItem.IsComplete, Mode=TwoWay}" 
+                      Content="Tarefa finalizada" Margin="0,12" />
 
-            <TextBox Header="Detalhes" Text="{x:Bind ViewModel.TodoItem.Details, Mode=TwoWay}" TextWrapping="Wrap" Height="120" Margin="0,0,0,12" />
+            <TextBox Header="Título" Text="{x:Bind ViewModel.TodoItem.Title, Mode=TwoWay}" Margin="0,12" />
+
+            <TextBox Header="Detalhes" Text="{x:Bind ViewModel.TodoItem.Details, Mode=TwoWay}" TextWrapping="Wrap" Height="120" Margin="0,12" />
+
+            <CalendarDatePicker Header="Inicia em" PlaceholderText="Selecione a data de início da sua tarefa"
+                                Date="{x:Bind ViewModel.TodoItem.StartDate, Mode=TwoWay, Converter={StaticResource DateTimeOffsetConverter}}" />
+
         </StackPanel>
     </Grid>
 </Page>
