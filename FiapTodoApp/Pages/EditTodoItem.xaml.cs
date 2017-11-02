@@ -30,6 +30,12 @@ namespace FiapTodoApp.Pages
         public EditTodoItem()
         {
             this.InitializeComponent();
+            this.Loaded += EditTodoItem_Loaded;
+        }
+
+        private async void EditTodoItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.Initialize();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

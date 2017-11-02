@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -24,6 +26,22 @@ namespace FiapTodoApp
     /// </summary>
     sealed partial class App : Application
     {
+        private static IEnumerable<string> _availableColors;
+        public static IEnumerable<string> AvailableColors
+        {
+            get
+            {
+                if (_availableColors != null)
+                {
+                    return _availableColors;
+                }
+
+                _availableColors = typeof(Colors).GetRuntimeProperties().Select(c => c.Name);
+
+                return _availableColors;
+            }
+        }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().

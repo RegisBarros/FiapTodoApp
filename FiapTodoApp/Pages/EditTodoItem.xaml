@@ -6,12 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converter="using:FiapTodoApp.Converters"
+    xmlns:model="using:FiapTodoApp.Models"
     mc:Ignorable="d">
 
     <Page.Resources>
         <converter:NullableDateTimeToNullableDateTimeOffsetConverter x:Key="DateTimeOffsetConverter" />
         <converter:NullToBooleanConverter x:Key="BooleanConverter" />
         <converter:NullToVisibilityConverter x:Key="VisibilityConverter" />
+        <converter:TypeToObjectConverter x:Key="TypeToObjectConverter" />
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar>
@@ -31,6 +33,22 @@
                 <TextBox Header="Título" Text="{x:Bind ViewModel.TodoItem.Title, Mode=TwoWay}" Margin="0,12" />
 
                 <TextBox Header="Detalhes" Text="{x:Bind ViewModel.TodoItem.Details, Mode=TwoWay}" TextWrapping="Wrap" Height="120" Margin="0,12" />
+
+                <ComboBox Header="Categoria" ItemsSource="{x:Bind ViewModel.Categories}" PlaceholderText="Selecione a categoria da sua tarefa"
+            SelectedItem="{x:Bind ViewModel.TodoItem.Category, Mode=TwoWay, Converter={StaticResource TypeToObjectConverter}}" Margin="0,12">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="model:Category">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Height="20" Width="20" Margin="12,0">
+                                    <Ellipse.Fill>
+                                        <SolidColorBrush Color="{x:Bind Color}" />
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock Text="{x:Bind Description}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <CalendarDatePicker Header="Inicia em" PlaceholderText="Selecione a data de início da sua tarefa"
                     Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, Converter={StaticResource DateTimeOffsetConverter}}" 

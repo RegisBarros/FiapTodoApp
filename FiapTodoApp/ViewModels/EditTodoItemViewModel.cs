@@ -15,8 +15,13 @@ namespace FiapTodoApp.ViewModels
 {
     public class EditTodoItemViewModel : NotifyableClass
     {
+        public MockCategoryRepository CategoryRepository { get; private set; } = MockCategoryRepository.Instance;
         public MockTodoItemRepository TodoItemRepository { get; private set; } = MockTodoItemRepository.Instance;
+
         public ObservableCollection<TodoItem> TodoItems => TodoItemRepository.Items;
+        public ObservableCollection<Category> Categories => CategoryRepository.Items;
+
+        public IEnumerable<string> CategoryColors => App.AvailableColors;
 
         private TodoItem _todoItem;
 
@@ -70,6 +75,17 @@ namespace FiapTodoApp.ViewModels
         {
             get { return _minimumSliderValue; }
             set { Set(ref _minimumSliderValue, value); }
+        }
+
+        public async Task Initialize()
+        {
+            var todoCategory = Categories.SingleOrDefault(c => c.Id == TodoItem.CategoryId);
+
+            if (todoCategory != null)
+            {
+                TodoItem.Category = null;
+                TodoItem.Category = todoCategory;
+            }
         }
 
         public void StartDatePicker_DateChanged(CalendarDatePicker sender, CalendarDatePickerDateChangedEventArgs args)

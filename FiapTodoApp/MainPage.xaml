@@ -6,8 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:FiapTodoApp.Models"
+    xmlns:converter="using:FiapTodoApp.Converters"
     mc:Ignorable="d">
 
+
+    <Page.Resources>
+        <converter:TypeToObjectConverter x:Key="TypeToObjectConverter" />
+    </Page.Resources>
+    
     <Page.BottomAppBar>
         <CommandBar> 
             <CommandBar.PrimaryCommands>
@@ -30,16 +36,54 @@
                 <Button Width="44" Height="44" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"
                     Background="Transparent" Click="{x:Bind ViewModel.HamburguerButton_Click}" />
 
-                <ListView ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}" Grid.Row="1">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="model:Category">
-                            <StackPanel Orientation="Horizontal">
-                                <Ellipse Height="20" Width="20" Fill="{x:Bind Color, Mode=OneWay}" Margin="0,0,12,0" />
-                                <TextBlock Text="{x:Bind Description, Mode=OneWay}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel>
+
+                    <ListView ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}"
+				    SelectedItem="{x:Bind ViewModel.SelectedCategory, Mode=OneWay}"
+				    Tapped="{x:Bind ViewModel.Categories_Tapped}"
+				    RightTapped="{x:Bind ViewModel.Category_RightTapped}">
+                            <ListView.ContextFlyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBox Text="{x:Bind ViewModel.SelectedEditCategory.Description, Mode=TwoWay}" />
+                                        <ComboBox ItemsSource="{x:Bind ViewModel.CategoryColors}"
+                SelectedItem="{x:Bind ViewModel.SelectedEditCategory.Color, Mode=TwoWay, Converter={StaticResource TypeToObjectConverter}}">
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Rectangle Height="24" Width="24" Margin="12,0">
+                                                            <Rectangle.Fill>
+                                                                <SolidColorBrush Color="{x:Bind }" />
+                                                            </Rectangle.Fill>
+                                                        </Rectangle>
+                                                        <TextBlock Text="{x:Bind }" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </StackPanel>
+                                </Flyout>
+                            </ListView.ContextFlyout>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="model:Category">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Height="20" Width="20" Fill="{x:Bind Color, Mode=OneWay}" Margin="0,0,12,0" />
+                                        <TextBlock Text="{x:Bind Description, Mode=OneWay}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <Button Background="Transparent" Click="{x:Bind ViewModel.AddCategoryButton_Click}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Add" Height="24" Width="24" Margin="0,0,12,0"/>
+                                    <TextBlock Text="Nova categoria" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
 
 
                 <StackPanel Orientation="Vertical" Grid.Row="2" Margin="0,0,0,48">
@@ -56,7 +100,7 @@
         </SplitView.Pane>
         <SplitView.Content>
             <Grid>
-                <ListView ItemsSource="{x:Bind ViewModel.TodoItems, Mode=OneWay}" 
+                <ListView ItemsSource="{x:Bind ViewModel.FilteredTodoItems, Mode=OneWay}" 
                 SelectionChanged="{x:Bind ViewModel.TodoItems_SelectionChanged}"
                 RightTapped="{x:Bind ViewModel.TodoItems_RightTapped}">
                     <ListView.ItemTemplate>
@@ -66,7 +110,7 @@
                                     <ColumnDefinition Width="40" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Ellipse Height="20" Width="20" Fill="{x:Bind Category.Color}" />
+                                <Ellipse Height="20" Width="20" Fill="{x:Bind Category.Color, Mode=OneWay}" />
                                 <TextBlock Text="{x:Bind Title}" Grid.Column="1" />
                             </Grid>
                         </DataTemplate>

@@ -23,18 +23,103 @@ namespace FiapTodoApp.ViewModels
         public ObservableCollection<Category> Categories => CategoryRepository.Items;
         public ObservableCollection<TodoItem> TodoItems => TodoItemRepository.Items;
 
+        public IEnumerable<string> CategoryColors => App.AvailableColors;
+
         public async Task Initialize()
         {
             await CategoryRepository.LoadAll();
             await TodoItemRepository.LoadAll();
-        }
 
+            TodoItems.CollectionChanged -= TodoItems_CollectionChanged;
+            TodoItems.CollectionChanged += TodoItems_CollectionChanged;
+            FilteredTodoItems = TodoItems;
+        }
+        
         private bool _isSplitViewOpen;
 
         public bool IsSplitViewOpen
         {
             get { return _isSplitViewOpen; }
             set { Set(ref _isSplitViewOpen, value); }
+        }
+
+        private IEnumerable<TodoItem> _filteredTodoItems;
+        public IEnumerable<TodoItem> FilteredTodoItems
+        {
+            get { return _filteredTodoItems; }
+            set
+            {
+                var newValue = value;
+
+                if (SelectedCategory != null)
+                {
+                    newValue = newValue.Where(t => t.CategoryId == SelectedCategory.Id);
+                }
+
+                Set(ref _filteredTodoItems, newValue);
+            }
+        }
+
+        private Category _selectedCategory;
+        public Category SelectedCategory
+        {
+            get { return _selectedCategory; }
+            set
+            {
+                if (Equals(_selectedCategory, value))
+                {
+                    return;
+                }
+
+                Set(ref _selectedCategory, value);
+
+                FilteredTodoItems = TodoItems;
+            }
+        }
+
+        private Category _selectedEditCategory;
+        public Category SelectedEditCategory
+        {
+            get { return _selectedEditCategory; }
+            set { Set(ref _selectedEditCategory, value); }
+        }
+
+        public void Category_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            SelectedEditCategory = ((FrameworkElement)e.OriginalSource).DataContext as Category;
+        }
+
+        public async void AddCategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            var category = new Category
+            {
+                Description = $"Categoria {Categories.Count + 1}",
+                Color = App.AvailableColors.Except(Categories.Select(c => c.Color)).First()
+            };
+
+            await CategoryRepository.Create(category);
+        }
+
+
+        public void Categories_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var listView = (ListView)sender;
+
+            var category = ((FrameworkElement)e.OriginalSource).DataContext as Category;
+
+            if (SelectedCategory != null && Equals(category, SelectedCategory))
+            {
+                SelectedCategory = null;
+            }
+            else
+            {
+                SelectedCategory = category;
+            }
+        }
+
+        private void TodoItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            FilteredTodoItems = TodoItems;
         }
 
         public void HamburguerButton_Click()
