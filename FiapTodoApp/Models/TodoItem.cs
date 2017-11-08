@@ -72,11 +72,9 @@ namespace FiapTodoApp.Models
             get
             {
                 if (Category != null)
-                    return Category.Id.ToString();
+                    return Category.Id;
 
-                Guid categoryId;
-                Guid.TryParse(_categoryId, out categoryId);
-                return categoryId.ToString();
+                return _categoryId;
             }
             set { Set(ref _categoryId, value); }
         }
