@@ -53,6 +53,7 @@ namespace FiapTodoApp.Repositories
                 todoItem.StartDate = entity.StartDate;
                 todoItem.Appointment = entity.Appointment;
                 todoItem.Category = entity.Category;
+                todoItem.Location = todoItem.Location;
             }
         }
 

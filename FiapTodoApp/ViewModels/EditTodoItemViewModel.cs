@@ -8,6 +8,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -67,6 +69,35 @@ namespace FiapTodoApp.ViewModels
                     TodoItem.StartDate = StartDate.Value.Date + _startTime;
                 }
             }
+        }
+
+        public EditTodoItemViewModel()
+        {
+            DataTransferManager.GetForCurrentView().DataRequested += EditTodoItemViewModel_DataRequested;
+        }
+
+        private void EditTodoItemViewModel_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            DataRequest request = args.Request;
+
+            StringBuilder text = new StringBuilder();
+            text.AppendLine($"Tarefa: {TodoItem.Title}");
+            text.AppendLine($"Detalhes: {TodoItem.Details}");
+
+            request.Data.SetText(text.ToString());
+            request.Data.Properties.Title = TodoItem.Title;
+        }
+
+        public async void LocationMapButton_Click()
+        {
+            await Launcher.LaunchUriAsync(new Uri($"bingmaps:?q={TodoItem.Location}"));
+
+            //https://docs.microsoft.com/en-us/windows/uwp/launch-resume/launch-maps-app
+        }
+
+        public void ShareTodoItemButton_Click()
+        {
+            DataTransferManager.ShowShareUI();
         }
 
         private int _minimumSliderValue;

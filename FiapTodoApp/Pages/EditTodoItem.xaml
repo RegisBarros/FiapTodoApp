@@ -19,6 +19,11 @@
         <CommandBar>
             <CommandBar.PrimaryCommands>
                 <AppBarButton Label="Save" Icon="Save" Click="{x:Bind ViewModel.SaveTodoItemButton_Click}" />
+                <AppBarButton Label="Share" Click="{x:Bind ViewModel.ShareTodoItemButton_Click}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
                 <AppBarButton Label="Delete" Icon="Delete" Click="{x:Bind ViewModel.DeleteTodoItemButton_Click}" />
             </CommandBar.PrimaryCommands>
         </CommandBar>
@@ -49,6 +54,16 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
+
+                <TextBlock Text="Local" />
+                <StackPanel Margin="0,12">
+                    <TextBox Text="{x:Bind ViewModel.TodoItem.Location, Mode=TwoWay}" TextWrapping="Wrap" Height="60" />
+                    <Button HorizontalAlignment="Right" Click="{x:Bind ViewModel.LocationMapButton_Click}">
+                        <Button.Content>
+                            <SymbolIcon Symbol="Map" />
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
 
                 <CalendarDatePicker Header="Inicia em" PlaceholderText="Selecione a data de início da sua tarefa"
                     Date="{x:Bind ViewModel.StartDate, Mode=TwoWay, Converter={StaticResource DateTimeOffsetConverter}}" 
